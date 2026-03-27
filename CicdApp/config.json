@@ -1,0 +1,22 @@
+{
+  "pipeline": [
+    {
+      "name": "Git Clone",
+      "command": "git",
+      "args": "clone ...",
+      "stopOnFailure": true
+    },
+    {
+      "name": "Build",
+      "command": "dotnet",
+      "args": "build",
+      "stopOnFailure": true
+    },
+    {
+      "name": "Unit Tests",
+      "command": "dotnet",
+      "args": "test",
+      "stopOnFailure": false
+    }
+  ]
+}
