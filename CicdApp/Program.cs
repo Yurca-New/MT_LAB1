@@ -1,5 +1,24 @@
 ﻿using CicdApp.Models;
 using CicdApp.Services;
-ConfigParserService parser = new ConfigParserService();
-PipelineConfig config = parser.ParseConfig("C:\\Users\\Yurca\\Downloads\\MT_LAB1\\MT_LAB1\\CicdApp\\config.json");
-config.DisplayInfo();
+namespace CicdApp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide the path to the configuration file.");
+                return;
+            }
+            Console.WriteLine(args[0]);
+            ConfigParserService parser = new ConfigParserService();
+            PipelineConfig config = parser.ParseConfig(args[0]);
+            config.DisplayInfo();
+
+            LoggerService logger = new LoggerService(args[1]);
+            Console.WriteLine(logger._logFilePath);
+            logger.Log("Pipeline execution started.", LogLevel.INFO);
+        }
+    }
+}
