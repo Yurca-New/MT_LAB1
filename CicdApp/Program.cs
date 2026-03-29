@@ -19,6 +19,10 @@ namespace CicdApp
             LoggerService logger = new LoggerService(args[1]);
             Console.WriteLine(logger._logFilePath);
             logger.Log("Pipeline execution started.", LogLevel.INFO);
+
+            CommandRunnerService commandRunnerService = new CommandRunnerService();
+            Console.WriteLine(commandRunnerService.RunCommand("git", "status",args[1]));
+            
         }
     }
 }
