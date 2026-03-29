@@ -6,23 +6,15 @@ namespace CicdApp
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Please provide the path to the configuration file.");
-                return;
-            }
-            Console.WriteLine(args[0]);
+            string targetDir = args[1];
+            string configPath = args[0];
+            LoggerService logger = new LoggerService(targetDir);
+            CommandRunnerService commandRunner = new CommandRunnerService();
             ConfigParserService parser = new ConfigParserService();
-            PipelineConfig config = parser.ParseConfig(args[0]);
-            config.DisplayInfo();
+            PipelineEngine pipelineEngine = new PipelineEngine(commandRunner, logger);
+            PipelineConfig config = parser.ParseConfig(configPath);
 
-            LoggerService logger = new LoggerService(args[1]);
-            Console.WriteLine(logger._logFilePath);
-            logger.Log("Pipeline execution started.", LogLevel.INFO);
-
-            CommandRunnerService commandRunnerService = new CommandRunnerService();
-            Console.WriteLine(commandRunnerService.RunCommand("git", "status",args[1]));
-            
+            pipelineEngine.Run(config, targetDir);
         }
     }
 }
