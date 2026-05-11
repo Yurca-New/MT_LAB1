@@ -1,12 +1,9 @@
-﻿using CicdApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CicdApp.Models
 {
     public class PipelineConfig
     {
-        public List<PipelineStep> pipeline { get; set; } = new List<PipelineStep>();
+        public List<PipelineStep> Pipeline { get; set; } = new List<PipelineStep>();
     }
 }
