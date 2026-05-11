@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Collections.Generic;
-
-namespace CicdApp.Models
+﻿namespace CicdApp.Models
 {
     public class PipelineStep
     {
-        public string name { get; set; }
-        public string command { get; set; }
-        public string args { get; set; }
-        public bool stopOnFailure { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Command { get; set; } = string.Empty;
+        public string Args { get; set; } = string.Empty;
+        public bool StopOnFailure { get; set; }
     }
 }
