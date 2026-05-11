@@ -1,27 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
+using CicdApp.Models;
 
 namespace CicdApp.Services
 {
     public class CommandRunnerService
     {
-        public int RunCommand(string command, string arg, string trgetDir)
+        public static async Task<CommandResult> RunCommandAsync(string command, string args, string workingDirectory)
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
-            processStartInfo.FileName = command;
-            processStartInfo.Arguments = arg;
-            processStartInfo.WorkingDirectory = trgetDir;
-            processStartInfo.UseShellExecute = false;
-            processStartInfo.CreateNoWindow = true;
-            using (Process process = new Process())
+            var result = new CommandResult();
+
+            var processStartInfo = new ProcessStartInfo
             {
-                process.StartInfo = processStartInfo;
+                FileName = command,
+                Arguments = args,
+                WorkingDirectory = workingDirectory,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+
+            using (var process = new Process { StartInfo = processStartInfo })
+            {
                 process.Start();
-                process.WaitForExit();
-                return process.ExitCode;
+
+                string output = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
+                string error = await process.StandardError.ReadToEndAsync().ConfigureAwait(false);
+
+                await process.WaitForExitAsync().ConfigureAwait(false);
+
+                result.ExitCode = process.ExitCode;
+                result.Output = output;
+                result.Error = error;
             }
+
+            return result;
         }
     }
 }
