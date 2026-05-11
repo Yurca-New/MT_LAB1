@@ -1,36 +1,34 @@
-﻿using CicdApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using System.Globalization;
+using System.IO;
+using CicdApp.Models;
 
 namespace CicdApp.Services
 {
     public class LoggerService
     {
-        public string _logFilePath;
+        private readonly string logFilePath;
 
-        public LoggerService(string torgetDir)
+        public LoggerService(string targetDir)
         {
-            string fileName = GenerateLogFileName(torgetDir);
-            string logFilePath = System.IO.Path.Combine(torgetDir, fileName);
-            _logFilePath = logFilePath;
+            string fileName = GenerateLogFileName(targetDir);
+            this.logFilePath = Path.Combine(targetDir, fileName);
         }
 
-        public string GenerateLogFileName(string torgetDir)
+        private static string GenerateLogFileName(string targetDir)
         {
-            DirectoryInfo dirInfo = new DirectoryInfo(torgetDir);
+            var dirInfo = new DirectoryInfo(targetDir);
             string dirName = dirInfo.Name;
-            string timestamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss");
-            string fileName = $"CICD_{dirName}_{timestamp}.log";
-            return fileName;
+            string timestamp = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss", CultureInfo.InvariantCulture);
+            return $"CICD_{dirName}_{timestamp}.log";
         }
 
         public void Log(string message, LogLevel level)
         {
-            string DataTime = $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}]";
+            string dateTime = $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture)}]";
             string levelPart = $"[{level.ToString()}]";
-            string fullMessage = $"{DataTime} {levelPart} {message}{Environment.NewLine}";
-            System.IO.File.AppendAllText(_logFilePath, fullMessage);
+            string fullMessage = $"{dateTime} {levelPart} {message}{Environment.NewLine}";
+            File.AppendAllText(this.logFilePath, fullMessage);
         }
     }
 }
